@@ -1,0 +1,20 @@
+{#- Файл наследуется от base.html #}
+{%- extends "base.html" %}
+{#- Переопределяем блок content из родителя #}
+{% block content %}
+  {#- Вставляем содержимое блока из родителя #}
+  {{- super() }}
+  {#- Дополняем блок #}
+  <h1>Добавить страницу</h1>
+  {%- for status, message in get_flashed_messages(True) %}
+  <p class='message {{ status }}'>{{ message }}</p>
+  {%- endfor %}
+  {#- Форма использует method='get' по умолчанию, валидными значениями являются
+      только 'get' и 'post' #}
+  <form>
+    <p><label>Имя: <input type='text' name='name' required /></label></p>
+    <p>Разметка:</p>
+    <textarea name='content'></textarea>
+    <input type='submit' value='Добавить' />
+  </form>
+{%- endblock %}

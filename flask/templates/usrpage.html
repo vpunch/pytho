@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  {{ super() }}
+  {# Фильтр safe используется, чтобы теги НЕ экранировались #}
+  {# Фильтр striptags удаляет все теги из текста #}
+  {# page.content[:50] -- первые 50 символов #}
+  {{ page.content|safe }}
+{% endblock %}

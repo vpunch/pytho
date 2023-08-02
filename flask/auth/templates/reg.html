@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+  {{ super() }}
+  <h1>Регистрация</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <p class='message'>{{ messages|first }}</p>
+    {% endif %}
+  {% endwith %}
+  <form method='POST'>
+    <div class='pairs'>
+      <label for='email-inp'>Эл. почта:</label>
+      <input type='text' name='email' id='email-inp' />
+      <label for='passwd-inp'>Пароль:</label>
+      <input type='password' name='passwd' id='passwd-inp' />
+      <label for='passwd-again-inp'>Пароль еще раз:</label>
+      <input type='password' name='passwd_again' id='passwd-again-inp' />
+    </div>
+    <fieldset>
+      <legend>Пол:</legend>
+      <div>
+        <label for='sex-male'>
+          {# Если не указать checked, ни один элемент не будет выбран #}
+          {# Если не указать value=..., для всех элементов по умолчанию будет
+             возвращаться 'on' #}
+          <input type='radio' name='sex' id='sex-male' value='male' checked />
+          мужской,
+        </label>
+      </div>
+      <div>
+        <label for='sex-female'>
+          <input type='radio' name='sex' id='sex-female' value='' />
+          женский
+        </label>
+      </div>
+    </fieldset>
+    <input type='submit' value='Зарегистрироваться' />
+  </form>
+{% endblock %}

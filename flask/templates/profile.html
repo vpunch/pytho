@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+  {{ super() }}
+  <h1>Привет,
+    {{ current_user.email.split('@')[0] }}
+    {{ session.logged }}
+    {{ request.cookies.logged }}
+  </h1>
+  <div class='usr-data'>
+    <div class='usr-pic'>
+      <img class='usr-pic--img'
+           src='{{ url_for("wsite.get_usr_pic", id_=current_user.id) }}' />
+      {# По умолчанию данные формы отправляются в
+         content-type=application/x-www-form-urlencoded. По сути формируется
+         строка запроса (query string, foo=1&bar=2), которая передается в теле
+         запроса, а не вставляется в URL #}
+      {# В этом формате символы, которые не являются ASCII или зарезервированы,
+         кодируются в %HH (процент и 2 шестнадцатеричных числа), то есть один
+         байт может быть заменен тремя. Из-за этого при передаче двоичных
+         данных их объем может увеличиться в 3 раза. #}
+      {# Формат multipart/form-data больше подходит для передачи двоичных
+         данных. Они будут передаваться в исходном виде, либо кодироваться в
+         base64, но к ним будут прикреплены MIME-заголовки с описанием, что
+         также увеличивает объем передаваемых данных. Поэтому простой текст
+         лучше не передавать в этом формате. #}
+      <form action='{{ url_for("wsite.upload_usr_pic") }}'
+            method='POST'
+            enctype='multipart/form-data'>
+        <input class='usr-pic--input' type='file' name='picture' />
+        <input class='usr-pic--input' type='submit' value='Загрузить' />
+      </form>
+    </div>
+    <div class='pairs'>
+      <p>Эл. почта:</p>
+      <p>{{ current_user.email }}</p>
+      <p>Дата регистрации:</p>
+      <p>{{ current_user.time|restime }}</p>
+      <p>Пол:</p>
+      <p>{% if current_user.is_male %} М {% else %} Ж {% endif %}</p>
+    </div>
+  </div>
+  <a class='logout-btn' href='{{ url_for("auth.handle_logout") }}'>
+    Выйти из профиля
+  </a>
+{% endblock %}

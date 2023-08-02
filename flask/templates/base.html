@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  {#- - удаляет пробел перед разделителем, - -- после #}
+  {%- block head %}
+  <meta charset='utf-8'>
+  {#- Подключаем стили #}
+  {#- Flask неявно создает представление static для /static/<filename>, что
+      позволяет использовать url_for для получения пути к ресурсу. filename
+      может быть относительным путем: filename="main/styles.css" #}
+  <link rel='stylesheet' {# relationship -#}
+        href='{{ url_for("static", filename="styles.css") }}' />
+  <title>
+    {%- if title %}
+    {#- В выражении после значения можно указать цепочку фильтров:
+    value|filter|filter #}
+    {#- join(', ') для объединения элементов списка #}
+    {#- title для приведения регистра к заголовку #}
+    {#- https://jinja.palletsprojects.com/en/3.1.x/templates/#builtin-filters #}
+    {{- title|title }}
+    {%- else -%}
+    ?
+    {%- endif -%}
+  </title>
+  {%- endblock %}
+</head>
+<body>
+  {%- block content %}
+  <ul class='main'>
+    {%- for item in menu %}
+    {#- Мы можем читать данные по атрибутам и ключам при помощи точки или [].
+        В случае с точкой сначала вызывается getattr(), затем __getitem__, в
+        случае с [] -- наоборот. #}
+    <li><a href='{{ item.path }}'>{{ item.name }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- endblock %}
+</body>
+</html>

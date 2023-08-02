@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  {{ super() }}
+  <h1>Авторизация</h1>
+  {# with variable = value используется для создания области видимости с
+  определением переменной #}
+  {# get_flashed_messages() вернет пустой список, если сообщений нет. Функция
+     возвращает список строк, но если передан True, то кортеж типа: (имя
+     категории, сообщение). #}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {# Фильтр first, чтобы получить первый элемент кортежа #}
+      <p class='message'>{{ messages|first }}</p>
+    {% endif %}
+  {% endwith %}
+  {# action='<path>' указывает, куда направить пользователя с данными из формы.
+     Если не указать, то текущий путь #}
+  <form method='post'>
+    {# Создаем скрытое поле с токеном для защиты от CSRF-атак #}
+    {{ form.hidden_tag() }}
+    <div class='pairs'>
+      {# HTML-комментарий #}
+      <!-- foobar -->
+      {% for field in form if field.name not in
+          ["csrf_token", "need_remem", "submit"] %}
+        {{ field.label }}
+        {% if field.errors %}
+          <div>
+            {{ field(class="invalid") }}
+            <span class='invalid'>{{ field.errors|first }}</span>
+          </div>
+        {% else %}
+          {{ field }}
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p>
+      {{ form.need_remem }}
+      {{ form.need_remem.label }}
+    </p>
+    {{ form.submit }}
+    <div><a href='{{ url_for(".handle_reg") }}'>Регистрация</a></div>
+  </form>
+{% endblock %}
